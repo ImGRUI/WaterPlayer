@@ -30,7 +30,8 @@ public class WebAPI {
         }
         app.use(Middleware.cors());
         app.use((req, res) -> {
-            if(!WaterPlayer.apiConfig.getBoolean("enable", false)){
+            boolean disabled = !WaterPlayer.apiConfig.getBoolean("enable", false);
+            if(disabled){
                 JsonObject resp = new JsonObject();
                 JsonObject error = new JsonObject();
                 error.addProperty("code", 403);
