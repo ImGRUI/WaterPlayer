@@ -91,6 +91,8 @@ dependencies {
     shade (implementation("ru.kelcuprum:java-express:0.2.4-dev.5"){
         exclude(module: "gson")
     })
+    // smtc
+//    shade (implementation("io.github.selemba1000:JavaMediaTranportControls:0.0.3"))
 
     // Minecraft
     if (mod_brand == 'fabric') {

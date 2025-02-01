@@ -63,8 +63,6 @@ public class WaterPlayer implements ClientModInitializer {
     public static DiscordIntegration discordIntegration;
     public static History history;
 
-    private boolean apiState = WaterPlayer.apiConfig.getBoolean("enable", true);
-
     public static String getPath(){
         String path = pathConfig.getBoolean("USE_GLOBAL", false) ? pathConfig.getString("PATH", "{HOME}/WaterPlayer") : "config/WaterPlayer";
         path = path.replace("{HOME}", System.getProperty("user.home"));
@@ -78,6 +76,7 @@ public class WaterPlayer implements ClientModInitializer {
         player = new MusicPlayer();
         history = new History();
         discordIntegration = new DiscordIntegration();
+        WebAPI.run();
         registerBinds();
         FabricLoader.getInstance().getModContainer("waterplayer").ifPresent(container -> {
             ResourceManagerHelper.registerBuiltinResourcePack(GuiUtils.getResourceLocation("waterplayer","legacy"), container, Component.translatable("resourcePack.waterplayer.legacy"), ResourcePackActivationType.NORMAL);
@@ -104,13 +103,10 @@ public class WaterPlayer implements ClientModInitializer {
             player.getAudioPlayer().stopTrack();
             discordIntegration.exitApplication();
             config.setString("YOUTUBE_REFRESH_TOKEN", player.youtube.getOauth2RefreshToken());
+            WebAPI.stop();
             TextureHelper.saveMap();
         });
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
-            if(apiState != WaterPlayer.apiConfig.getBoolean("enable", false)){
-                apiState = WaterPlayer.apiConfig.getBoolean("enable", false);
-                if(apiState) WebAPI.run(); else WebAPI.stop();
-            }
             for (KeyBind bind : keyBinds) {
                 if (bind.key().consumeClick()) bind.onExecute().run();
             }
@@ -139,8 +135,6 @@ public class WaterPlayer implements ClientModInitializer {
                     )
             );
         }));
-        if(WaterPlayer.apiConfig.getBoolean("enable", false)) WebAPI.run();
-
         ScreenEvents.KEY_PRESS.register((Screen screen, int code, int scan, int modifiers, CallbackInfoReturnable<Boolean> var5) -> {
             if (!WaterPlayer.config.getBoolean("ENABLE_KEYBINDS", false)) return;
             if (screen instanceof TitleScreen || screen instanceof PauseScreen || screen instanceof ControlScreen) {
