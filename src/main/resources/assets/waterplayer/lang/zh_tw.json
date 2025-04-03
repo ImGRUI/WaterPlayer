@@ -1,9 +1,5 @@
 {
-  //#if WALTER == 0
   "waterplayer.name": "WaterPlayer",
-  //#else
-  //$$ "waterplayer.name": "WalterPlayer",
-  //#endif
 
   "waterplayer.command.playlist.noName": "您沒有指定播放清單名稱",
   "waterplayer.command.now_playing.notPlaying": "沒有正在播放的曲目。",

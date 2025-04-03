@@ -1,10 +1,5 @@
 {
-  //#if WALTER == 0
   "waterplayer.name": "WaterPlayer",
-  //#else
-  //$$ "waterplayer.name": "WalterPlayer",
-  //#endif
-
   "waterplayer.command.playlist.noName": "You didn't specify a playlist name",
   "waterplayer.command.now_playing.notPlaying": "Nothing's Playing.",
   "waterplayer.command.now_playing": "Current Track:",

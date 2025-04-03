@@ -174,7 +174,7 @@ public class ControlScreen extends Screen {
         boolean isModern = WaterPlayer.config.getBoolean("CONTROL.MODERN_BUTTONS", true);
         // - Center
         int x$Buttons = x + (size / 2) - ((25 * 5 - 5) / 2);
-        addRenderableWidget(new ButtonBuilder(Component.translatable("waterplayer.control.shuffle"), (e) -> {
+        shuffle = (Button) addRenderableWidget(new ButtonBuilder(Component.translatable("waterplayer.control.shuffle"), (e) -> {
             WaterPlayer.player.getTrackScheduler().shuffle();
             for (AbstractWidget widget : queue.widgets) removeWidget(widget);
             queue.resetWidgets();

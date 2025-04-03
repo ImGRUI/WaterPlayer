@@ -80,17 +80,10 @@ public class WaterPlayer implements ClientModInitializer {
         registerBinds();
         FabricLoader.getInstance().getModContainer("waterplayer").ifPresent(container -> {
             ResourceManagerHelper.registerBuiltinResourcePack(GuiUtils.getResourceLocation("waterplayer","legacy"), container, Component.translatable("resourcePack.waterplayer.legacy"), ResourcePackActivationType.NORMAL);
-            //#if WALTER == 1
-            //$$ ResourceManagerHelper.registerBuiltinResourcePack(GuiUtils.getResourceLocation("waterplayer","default"), container, Component.translatable("resourcePack.waterplayer.default"), ResourcePackActivationType.NORMAL);
-            //#else
-            if(AlinLib.isAprilFool()) ResourceManagerHelper.registerBuiltinResourcePack(GuiUtils.getResourceLocation("waterplayer","walter"), container, Component.translatable("resourcePack.waterplayer.walter"), ResourcePackActivationType.NORMAL);
-            //#endif
+            ResourceManagerHelper.registerBuiltinResourcePack(GuiUtils.getResourceLocation("waterplayer","walter"), container, Component.translatable("resourcePack.waterplayer.walter"), ResourcePackActivationType.NORMAL);
         });
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             player.startAudioOutput();
-            //#if WALTER == 1
-            //$$ player.loadMusic("https://wf.kelcu.ru/mods/Dave%20Porter%20-%20Breaking%20Bad%20Main%20Title%20Theme%20(Extended).mp3", false);
-            //#endif
             OverlayHandler hud = new OverlayHandler();
             SubtitlesHandler sub = new SubtitlesHandler();
             ScreenEvents.SCREEN_RENDER.register(hud);
