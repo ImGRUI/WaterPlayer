@@ -196,7 +196,7 @@ public class WaterPlayer implements ClientModInitializer {
         ));
         KeyMapping key2 = KeyMappingHelper.register(new KeyMapping(
                 "waterplayer.key.pause",
-                GLFW.GLFW_KEY_P, // The keycode of the key
+                GLFW.GLFW_KEY_P, // The keycode of the key .
                 "waterplayer.name"
         ));
         KeyMapping key3 = KeyMappingHelper.register(new KeyMapping(
