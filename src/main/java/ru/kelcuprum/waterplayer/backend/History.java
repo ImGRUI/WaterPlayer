@@ -30,7 +30,7 @@ public class History {
                 WaterPlayer.log(ex.getMessage() == null ? ex.getClass().getName() : ex.getMessage());
             }
         } else save();
-        updateList();
+        if(WaterPlayer.config.getBoolean("HISTORY", false)) updateList();
     }
 
     public void addHistory(AudioTrack track){

@@ -17,6 +17,7 @@ import ru.kelcuprum.alinlib.api.events.client.ScreenEvents;
 import ru.kelcuprum.alinlib.api.events.client.GuiRenderEvents;
 import ru.kelcuprum.waterplayer.WaterPlayer;
 import ru.kelcuprum.waterplayer.frontend.gui.TextureHelper;
+import ru.kelcuprum.waterplayer.frontend.gui.screens.control.ControlScreen;
 import ru.kelcuprum.waterplayer.frontend.localization.MusicHelper;
 
 import java.awt.image.BufferedImage;
@@ -68,9 +69,9 @@ public class OverlayHandler implements GuiRenderEvents, ClientTickEvents.StartTi
         if ((AlinLib.MINECRAFT.options.hideGui ||
                 //#if MC >= 12002
                 AlinLib.MINECRAFT.gui.getDebugOverlay().showDebugScreen()
-            //#elseif MC < 12002
-            //$$ AlinLib.MINECRAFT.options.renderDebug
-            //#endif
+                //#elseif MC < 12002
+                //$$ AlinLib.MINECRAFT.options.renderDebug
+                //#endif
         ) && WaterPlayer.config.getBoolean("ENABLE_OVERLAY.HIDE_IN_DEBUG", true)
         ) return;
         if (WaterPlayer.player.getAudioPlayer().getPlayingTrack() == null) return;
@@ -146,33 +147,41 @@ public class OverlayHandler implements GuiRenderEvents, ClientTickEvents.StartTi
 
     @Override
     public void onRender(GuiGraphics guiGraphics, float tickDelta) {
-        if (!WaterPlayer.config.getBoolean("ENABLE_OVERLAY", true)) return;
+        if (!WaterPlayer.config.getBoolean("ENABLE_OVERLAY", true) || (AlinLib.MINECRAFT.screen instanceof ControlScreen)) return;
         int pos = WaterPlayer.config.getNumber("OVERLAY.POSITION", 0).intValue();
         render(guiGraphics, pos);
     }
 
-    public int getBarColor(){
+    public int getBarColor() {
         AudioTrack audio = WaterPlayer.player.getAudioPlayer().getPlayingTrack();
-        return isPause ? CLOWNFISH : isLive ? GROUPIE : !WaterPlayer.config.getBoolean("OVERLAY.ACCENT_COLOR", false) || audio == null ? SEADRIVE : switch (MusicHelper.getTitle(audio)){
+        return isPause ? CLOWNFISH : isLive ? GROUPIE : !WaterPlayer.config.getBoolean("OVERLAY.ACCENT_COLOR", false) || audio == null ? SEADRIVE : switch (MusicHelper.getTitle(audio)) {
             // MiatriSs
             case "HEX OF PINK FF006E" -> 0xFFFF006E;
-            default -> getCommonColor(audio);
+            default -> {
+                int color = getCommonColor(audio);
+                if(color == WHITE) color = SEADRIVE;
+                yield color;
+            }
         };
     }
+
     public static HashMap<AudioTrack, Integer> commonColors = new HashMap<AudioTrack, Integer>();
-    public static int getCommonColor(AudioTrack track){
-        if(track == null) return SEADRIVE;
-        if(MusicHelper.getThumbnail(track) == NO_ICON) return SEADRIVE;
-        if(commonColors.containsKey(track)) return commonColors.get(track);
+
+    public static int getCommonColor(AudioTrack track) {
+        return getCommonColor(track, WHITE);
+    }
+
+    public static int getCommonColor(AudioTrack track, int defaultColor) {
+        if (track == null) return defaultColor;
+        if (MusicHelper.getThumbnail(track) == NO_ICON) return defaultColor;
+        if (commonColors.containsKey(track)) return commonColors.get(track);
         BufferedImage image = TextureHelper.dynamicTextures.get(MusicHelper.getThumbnail(track));
-        if(image == null) return SEADRIVE;
+        if (image == null) return defaultColor;
         int height = image.getHeight();
         int width = image.getWidth();
         HashMap<Integer, Integer> m = new HashMap();
-        for(int i=0; i < height ; i++)
-        {
-            for(int j=0; j < width ; j++)
-            {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
                 int rgb = image.getRGB(j, i);
                 int[] rgbArr = getRGBArr(rgb);
                 // Filter out grays....
@@ -185,15 +194,15 @@ public class OverlayHandler implements GuiRenderEvents, ClientTickEvents.StartTi
                 }
             }
         }
-        int color = getMostCommonColour(m);;
+        int color = getMostCommonColour(m, defaultColor);
         commonColors.put(track, color);
         return color;
     }
 
     // Если у вас IDE жалуется на это, то он долбаеб конченый
-    public static int getMostCommonColour(HashMap<Integer, Integer> map) {
+    public static int getMostCommonColour(HashMap<Integer, Integer> map, int defaultColor) {
         LinkedList list = new LinkedList(map.entrySet());
-        if(list.isEmpty()) return SEADRIVE;
+        if (list.isEmpty()) return defaultColor;
         list.sort((o1, o2) -> ((Comparable) ((Map.Entry<?, ?>) (o1)).getValue())
                 .compareTo(((Map.Entry) (o2)).getValue()));
         Map.Entry<Integer, Integer> me = (Map.Entry<Integer, Integer>) list.getLast();
@@ -205,9 +214,10 @@ public class OverlayHandler implements GuiRenderEvents, ClientTickEvents.StartTi
         int red = (pixel >> 16) & 0xff;
         int green = (pixel >> 8) & 0xff;
         int blue = (pixel) & 0xff;
-        return new int[]{red,green,blue};
+        return new int[]{red, green, blue};
 
     }
+
     public static boolean notCorrect(int[] rgbArr) {
         int rgDiff = rgbArr[0] - rgbArr[1];
         int rbDiff = rgbArr[0] - rgbArr[2];
@@ -216,7 +226,8 @@ public class OverlayHandler implements GuiRenderEvents, ClientTickEvents.StartTi
         if (rgDiff > tolerance || rgDiff < -tolerance)
             if (rbDiff > tolerance || rbDiff < -tolerance)
                 return false;
-        double darkness = ((double) (rgbArr[0] + rgbArr[1] + rgbArr[2])/3);
+        double darkness = ((double) (rgbArr[0] + rgbArr[1] + rgbArr[2]) / 3);
         return true;
     }
+
 }

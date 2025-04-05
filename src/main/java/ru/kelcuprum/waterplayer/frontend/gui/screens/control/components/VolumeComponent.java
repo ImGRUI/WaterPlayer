@@ -48,6 +48,14 @@ public class VolumeComponent extends AbstractSliderButton {
     public void onClick(double d, double e) {
         this.setValueFromMouse(d);
     }
+
+    @Override
+    public boolean mouseScrolled(double d, double e, double f, double g) {
+        setValue(this.value + (g / 100));
+        applyValue();
+        return super.mouseScrolled(d, e, f, g);
+    }
+
     private void setValue(double d) {
         double e = this.value;
         this.value = Mth.clamp(d, 0.0, 1.0);

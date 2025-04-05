@@ -27,6 +27,7 @@ import ru.kelcuprum.waterplayer.backend.queue.AbstractQueue;
 import ru.kelcuprum.waterplayer.frontend.gui.LyricsHelper;
 import ru.kelcuprum.waterplayer.frontend.gui.components.LyricsBox;
 import ru.kelcuprum.waterplayer.frontend.gui.components.TrackButton;
+import ru.kelcuprum.waterplayer.frontend.gui.overlays.OverlayHandler;
 import ru.kelcuprum.waterplayer.frontend.gui.screens.HistoryScreen;
 import ru.kelcuprum.waterplayer.frontend.gui.screens.TrackScreen;
 import ru.kelcuprum.waterplayer.frontend.gui.screens.config.PlaylistsScreen;
@@ -97,16 +98,10 @@ public class ControlScreen extends Screen {
                 .setSize(cWidth - 22, 20).setPosition(x + 22, y)
                 .build());
         y += 22;
-        boolean history = WaterPlayer.config.getBoolean("HISTORY", false);
-        if(history) addRenderableWidget(new ButtonBuilder(Component.translatable("waterplayer.control.history"), (e) -> AlinLib.MINECRAFT.setScreen(new HistoryScreen(this)))
-                .setSprite(HISTORY)
-                .setSize(20, 20)
-                .setPosition(x, y)
-                .build());
         addRenderableWidget(new ButtonBuilder(Component.translatable("waterplayer.playlists"), (s) -> AlinLib.MINECRAFT.setScreen(PlaylistsScreen.build(this)))
-                .setCentered(history ? true : false)
-                .setIcon(history ? null : LIST)
-                .setSize(cWidth-(history ? 22 : 0), 20).setPosition(x+(history ? 22 : 0), y)
+                .setCentered(false)
+                .setIcon(LIST)
+                .setSize(cWidth, 20).setPosition(x, y)
                 .build());
         y += 22;
         if (WaterPlayer.config.getBoolean("EXPERIMENT.FILTERS", false)) {
@@ -232,9 +227,16 @@ public class ControlScreen extends Screen {
         addRenderableWidget(new TimelineComponent(x + (size / 2) - (timelineSize / 2), y + 30, timelineSize, 3, timelineSize >= 190));
 
         // - Left
-        int clearPos = x + size - 12 - 70 - 26 - AlinLib.MINECRAFT.font.width("100%");
-        if(clearPos > x$Buttons) clear = (Button) addRenderableWidget(new ButtonBuilder(Component.translatable("waterplayer.control.reset_queue"), (e) -> WaterPlayer.player.getTrackScheduler().reset())
+        int clearPos = x + size - 12 - 70 - 26 - AlinLib.MINECRAFT.font.width("100%")-18;
+        if(clearPos + 18 > x$Buttons) clear = (Button) addRenderableWidget(new ButtonBuilder(Component.translatable("waterplayer.control.reset_queue"), (e) -> WaterPlayer.player.getTrackScheduler().reset())
                 .setSprite(DONT)
+                .setStyle(nothingStyle)
+                .setSize(14, 14)
+                .setPosition(clearPos+18, y + 13)
+                .build());
+        boolean history = WaterPlayer.config.getBoolean("HISTORY", false);
+        if(clearPos > x$Buttons && history) addRenderableWidget(new ButtonBuilder(Component.translatable("waterplayer.control.history"), (e) -> AlinLib.MINECRAFT.setScreen(new HistoryScreen(this)))
+                .setSprite(HISTORY)
                 .setStyle(nothingStyle)
                 .setSize(14, 14)
                 .setPosition(clearPos, y + 13)
@@ -283,20 +285,18 @@ public class ControlScreen extends Screen {
         }
         addWidgetsToQueue(widgets);
     }
-//        add
     // Render
 
     @Override
-    //#if MC >=12002
     public void renderBackground(GuiGraphics guiGraphics, int i, int j, float f) {
         super.renderBackground(guiGraphics, i, j, f);
-        //#elseif MC < 12002
-        //$$ public void renderBackground(GuiGraphics guiGraphics) {
-        //$$         super.renderBackground(guiGraphics);
-        //#endif
         if (showControlPanel) renderControlPanel(guiGraphics);
         renderPlayerPanel(guiGraphics);
         renderQueueTitle(guiGraphics);
+    }
+    
+    public int getBackgroundColor(){
+        return BLACK_ALPHA;
     }
 
     @Override
@@ -314,14 +314,15 @@ public class ControlScreen extends Screen {
         int x = 5;
         int y = 5;
 
-        guiGraphics.fill(x, y+25, x + controlPanelWidth, (lyricsBox.visible ? height - 50 : (WaterPlayer.config.getBoolean("EXPERIMENT.FILTERS", false) ? 148 : 104)), BLACK_ALPHA);
-        guiGraphics.fill(x, y, x + controlPanelWidth, 25, BLACK_ALPHA);
+        guiGraphics.fill(x, y+25, x + controlPanelWidth, (lyricsBox.visible ? height - 50 : (WaterPlayer.config.getBoolean("EXPERIMENT.FILTERS", false) ? 148 : 104)), getBackgroundColor());
+        guiGraphics.fill(x, y, x + controlPanelWidth, 25, getBackgroundColor());
     }
 
     public void renderPlayerPanel(GuiGraphics guiGraphics) {
         int x = 5;
         int y = height - 45;
-        guiGraphics.fill(x, y, x + width - 10, y + 40, BLACK_ALPHA);
+        if(isTrackEnable() && lastTrack != null) guiGraphics.fill(x, y, x + width - 10, y + 40, OverlayHandler.getCommonColor(lastTrack, 0xFFFFFFFF) - 0x7F000000);
+        guiGraphics.fill(x, y, x + width - 10, y + 40, getBackgroundColor());
 
         if (isTrackEnable()) {
             guiGraphics.blit(
@@ -339,7 +340,7 @@ public class ControlScreen extends Screen {
     }
 
     public void renderQueueTitle(GuiGraphics guiGraphics) {
-        guiGraphics.fill(10 + controlPanelWidth, 5, width - 30, 25, BLACK_ALPHA);
+        guiGraphics.fill(10 + controlPanelWidth, 5, width - 30, 25, getBackgroundColor());
         int titleWidth = width - 40 - controlPanelWidth;
         Component component = Component.literal(queueTracks.getName());
         if(AlinLib.MINECRAFT.font.width(component) > titleWidth) renderScrollingString(guiGraphics, AlinLib.MINECRAFT.font, component, 10 + controlPanelWidth, width-30, 11, -1);
@@ -438,38 +439,6 @@ public class ControlScreen extends Screen {
     public void tick() {
         if (queue != null) queue.onScroll.accept(queue);
         trackIcon.visible = trackIcon.active = WaterPlayer.player.getAudioPlayer().getPlayingTrack() != null;
-        if (isTrackEnable() && WaterPlayer.config.getBoolean("CONTROL.ENABLE_LYRICS", true)) {
-            AudioTrack track = WaterPlayer.player.getAudioPlayer().getPlayingTrack();
-            audioLyrics = LyricsHelper.getLyrics(track);
-            if (audioLyrics != null) {
-                List<AudioLyrics.Line> list = audioLyrics.getLines();
-                String text = audioLyrics.getText();
-                if (list != null) {
-                    StringBuilder builder = new StringBuilder();
-                    for (AudioLyrics.Line line : list) {
-                        if (!(line.getDuration() == null)) {
-                            int type = WaterPlayer.config.getNumber("CONTROL.LYRICS.TYPE", 0).intValue();
-                            Duration pos = Duration.ofMillis(track.getPosition());
-                            if (type == 0) {
-                                if (pos.toMillis() >= line.getTimestamp().toMillis() && pos.toMillis() <= line.getTimestamp().toMillis() + line.getDuration().toMillis())
-                                    builder.append(line.getLine().replace("\r", "")).append("\n");
-                                else builder.append("§7").append(line.getLine().replace("\r", "")).append("§r\n");
-                            } else if (type == 1) {
-                                if ((pos.toMillis() <= line.getTimestamp().toMillis()) || (pos.toMillis() >= line.getTimestamp().toMillis() && pos.toMillis() <= line.getTimestamp().toMillis() + line.getDuration().toMillis()))
-                                    builder.append(line.getLine().replace("\r", "")).append("\n");
-                            } else {
-                                builder.append(line.getLine().replace("\r", "")).append("\n");
-                            }
-                        }
-                    }
-                    this.lyricsBox.setLyrics(Component.literal(builder.toString()));
-                    this.lyricsBox.visible = !builder.toString().isEmpty();
-                } else if (text != null) {
-                    this.lyricsBox.setLyrics(Component.literal(text.replace("\r", "")));
-                    this.lyricsBox.visible = !text.isBlank();
-                } else this.lyricsBox.visible = false;
-            } else this.lyricsBox.visible = false;
-        } else this.lyricsBox.visible = false;
         if (queueTracks != WaterPlayer.player.getTrackScheduler().queue) queueTracks = WaterPlayer.player.getTrackScheduler().queue;
         if (lastCountQueue != WaterPlayer.player.getTrackScheduler().queue.getQueue().size()) {
             this.lastCountQueue = WaterPlayer.player.getTrackScheduler().queue.getQueue().size();
@@ -484,8 +453,6 @@ public class ControlScreen extends Screen {
             queue.resetWidgets();
             addQueue();
         }
-//        load.setActive(WaterPlayer.player.getTrackScheduler().queue.addTrackAvailable());
-//        editBox.active = (WaterPlayer.player.getTrackScheduler().queue.addTrackAvailable());
         super.tick();
     }
 

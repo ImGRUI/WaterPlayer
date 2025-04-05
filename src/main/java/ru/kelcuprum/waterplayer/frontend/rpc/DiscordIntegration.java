@@ -49,13 +49,7 @@ public class DiscordIntegration {
     }
 
     public void registerApplication() {
-        client = new IPCClient(
-                //#if WALTER == 0
-                1197963953695903794L
-                //#else
-                //$$ 1277205430275145758L
-                //#endif
-        );
+        client = new IPCClient(1197963953695903794L);
         setupListener();
         try {
             client.connect();
@@ -158,18 +152,19 @@ public class DiscordIntegration {
     public long parseSeconds(long mills) {
         return (mills - (mills % 1000)) / 1000;
     }
-
+    public long lastUpdate = 0;
     public void send(RichPresence presence) {
         if (!empty && connected && presence == null) {
             if (lastPresence != null) exitApplication();
             lastPresence = null;
             empty = true;
-        } else if (presence != null && (lastPresence == null || (!lastPresence.toJson().toString().equalsIgnoreCase(presence.toJson().toString())))) {
+        } else if (presence != null && (lastPresence == null || (!lastPresence.toJson().toString().equalsIgnoreCase(presence.toJson().toString()))) && System.currentTimeMillis() - lastUpdate > 2500) {
             if (empty) registerApplication();
             empty = false;
             try {
                 if (connected) client.sendRichPresence(presence);
                 lastPresence = presence;
+                lastUpdate = System.currentTimeMillis();
             } catch (Exception ex) {
                 WaterPlayer.log(ex.getMessage() == null ? ex.getClass().getName() : ex.getMessage(), Level.ERROR);
             }
