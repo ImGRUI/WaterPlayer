@@ -62,8 +62,12 @@ public class WaterPlayer implements ClientModInitializer {
     public static DiscordIntegration discordIntegration;
 
     public static String getPath(){
-        String path = pathConfig.getBoolean("USE_GLOBAL", false) ? pathConfig.getString("PATH", "{HOME}/WaterPlayer") : "config/WaterPlayer";
-        path = path.replace("{HOME}", System.getProperty("user.home"));
+        String path = pathConfig.getBoolean("USE_GLOBAL", false) ? (
+            Util.getPlatform().name().contains("win") ?
+                    pathConfig.getString("PATH", "{HOME}/WaterPlayer") :
+                    pathConfig.getString("PATH.UNIX", "/home/${USER}/WaterPlayer")
+        ) : "config/WaterPlayer";
+        path = path.replace("{HOME}", System.getProperty("user.home")).replace("{USER}", System.getProperty("user.name"));
         return path;
     }
 

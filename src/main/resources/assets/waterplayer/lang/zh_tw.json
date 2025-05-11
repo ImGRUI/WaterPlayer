@@ -208,7 +208,8 @@
   "waterplayer.config.experiment.filters": "曲目篩選器",
   "waterplayer.config.data": "資料",
   "waterplayer.config.data.use_global": "所有用戶端使用共同資料夾",
-  "waterplayer.config.data.path": "資料夾",
+  "waterplayer.config.data.path": "資料夾 (Windows)",
+  "waterplayer.config.data.path.unix": "資料夾 (UNIX)",
   "waterplayer.config.data.move": "將設定檔移至共同資料夾",
   "waterplayer.config.data.update_config": "更新設定檔",
 

@@ -231,7 +231,8 @@
   "waterplayer.config.experiment.filters": "Track filters",
   "waterplayer.config.data": "Data",
   "waterplayer.config.data.use_global": "Use a common folder for all clients",
-  "waterplayer.config.data.path": "Folder",
+  "waterplayer.config.data.path": "Folder (Windows)",
+  "waterplayer.config.data.path.unix": "Folder (UNIX)",
   "waterplayer.config.data.move": "Move configs to common folder",
   "waterplayer.config.data.update_config": "Update configs",
 

@@ -113,6 +113,7 @@ public class AdditionalScreen {
         builder.addWidget(new CategoryBox(Component.translatable("waterplayer.config.data"))
                 .addValue(new ButtonBooleanBuilder(Component.translatable("waterplayer.config.data.use_global"), false).setConfig(WaterPlayer.pathConfig, "USE_GLOBAL"))
                 .addValue(new EditBoxBuilder(Component.translatable("waterplayer.config.data.path")).setValue("{HOME}/WaterPlayer").setConfig(WaterPlayer.pathConfig, "PATH"))
+                .addValue(new EditBoxBuilder(Component.translatable("waterplayer.config.data.path.unix")).setValue("/home/{USER}/WaterPlayer").setConfig(WaterPlayer.pathConfig, "PATH.UNIX"))
                 .addValue(new ButtonBuilder(Component.translatable("waterplayer.config.data.move")).setOnPress((s) -> {
                     try {
                         if(!new File(WaterPlayer.getPath()).exists()) Files.createDirectory(Path.of(WaterPlayer.getPath()));

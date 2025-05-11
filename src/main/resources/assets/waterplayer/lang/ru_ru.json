@@ -232,7 +232,8 @@
   "waterplayer.config.experiment.filters": "Фильтры трека",
   "waterplayer.config.data": "Данные",
   "waterplayer.config.data.use_global": "Использовать общую папку для всех клиентов",
-  "waterplayer.config.data.path": "Папка",
+  "waterplayer.config.data.path": "Папка (Windows)",
+  "waterplayer.config.data.path.unix": "Папка (UNIX)",
   "waterplayer.config.data.move": "Переместить конфиги в общую папку",
   "waterplayer.config.data.update_config": "Обновить конфиги",
 

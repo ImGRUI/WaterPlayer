@@ -232,7 +232,8 @@
   "waterplayer.config.experiment.filters": "Фільтр треків",
   "waterplayer.config.data": "Дані",
   "waterplayer.config.data.use_global": "Використовувати спільну теку для всіх клієнтів",
-  "waterplayer.config.data.path": "Тека",
+  "waterplayer.config.data.path": "Тека (Windows)",
+  "waterplayer.config.data.path.unix": "Тека (UNIX)",
   "waterplayer.config.data.move": "Перемістити налаштування до звичайної теки",
   "waterplayer.config.data.update_config": "Оновити налаштування",
 
