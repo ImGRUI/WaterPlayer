@@ -17,7 +17,7 @@ import org.lwjgl.glfw.GLFW;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.util.tinyfd.TinyFileDialogs;
 import ru.kelcuprum.alinlib.AlinLib;
-import ru.kelcuprum.alinlib.gui.Colors;
+import ru.kelcuprum.alinlib.gui.GuiUtils;
 import ru.kelcuprum.alinlib.gui.components.ConfigureScrolWidget;
 import ru.kelcuprum.alinlib.gui.components.builder.button.ButtonBuilder;
 import ru.kelcuprum.alinlib.gui.components.builder.editbox.EditBoxBuilder;
@@ -73,8 +73,8 @@ public class TrackEditorScreen extends Screen {
         addRenderableWidget(new TextBuilder(Component.translatable("waterplayer.editor.file", file.getName())).setPosition(x, 30).setSize(size, 20).build());
         int y = 60;
         icon = (Button) addRenderableWidget(new ButtonBuilder(Component.empty(), (s) -> showOpenFileDialog$icon()).setSprite(getIcon()).setPosition(x, y).setSize(36, 36).build());
-        addRenderableWidget(new TextBuilder(Component.translatable("waterplayer.playlist.edit.drag_and_drop"), (s) -> showOpenFileDialog$icon()).setPosition(x+41, y).setSize(size-41, 18).build());
-        addRenderableWidget(new TextBuilder(Component.translatable("waterplayer.playlist.edit.drag_and_drop.second"), (s) -> showOpenFileDialog$icon()).setPosition(x+41, y+18).setSize(size-41, 18).build());
+        addRenderableWidget(new TextBuilder(Component.translatable("waterplayer.playlist.edit.drag_and_drop"), (s) -> showOpenFileDialog$icon()).setStyle(GuiUtils.getStyleByID("flat")).setPosition(x+41, y).setSize(size-41, 18).build());
+        addRenderableWidget(new TextBuilder(Component.translatable("waterplayer.playlist.edit.drag_and_drop.second"), (s) -> showOpenFileDialog$icon()).setStyle(GuiUtils.getStyleByID("flat")).setPosition(x+41, y+18).setSize(size-41, 18).build());
         y += 41;
         addRenderableWidget(new EditBoxBuilder(Component.translatable("waterplayer.playlist.title"), (s) -> {
             try {
@@ -278,9 +278,9 @@ public class TrackEditorScreen extends Screen {
         //$$ public void renderBackground(GuiGraphics guiGraphics) {
         //$$         super.renderBackground(guiGraphics);
         //#endif
-        guiGraphics.fill(5, 5, 215, 25, Colors.BLACK_ALPHA);
-        guiGraphics.fill(5, 30, 215, 50, Colors.BLACK_ALPHA);
-        guiGraphics.fill(5, 55, 215, panelHeight, Colors.BLACK_ALPHA);
+        GuiUtils.getSelected().renderTitleBackground(guiGraphics, 5, 5, 215, 25);
+        GuiUtils.getSelected().renderTitleBackground(guiGraphics, 5, 30, 215, 50);
+        GuiUtils.getSelected().renderBackground(guiGraphics, 5, 55, 215, panelHeight);
     }
 
 

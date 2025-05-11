@@ -1,11 +1,10 @@
 apply plugin: 'maven-publish'
-apply plugin: 'dev.architectury.loom'
+apply plugin: 'fabric-loom'
 apply plugin: 'com.replaymod.preprocess'
 apply plugin: 'me.fallenbreath.yamlang'
 apply plugin: 'io.github.goooler.shadow'
 
-def mod_brand = project.name.endsWith("-common") ? 'common' : (loom.platform.get() as String).toLowerCase()
-assert mod_brand in ['fabric', 'forge', 'neoforge', 'common']
+def mod_brand = "fabric"
 archivesBaseName = (project.archives_base_name == null ? rootProject.archives_base_name : project.archives_base_name) + "-" + mod_brand
 group = rootProject.maven_group
 
@@ -58,8 +57,6 @@ loom {
     }
 }
 remapJar {
-    remapperIsolation = true
-    injectAccessWidener = true
 }
 
 configurations {
@@ -78,7 +75,8 @@ dependencies {
     }
     // Music
     implementation("meteordevelopment:starscript:0.3.4")
-    shade (implementation("net.hycrafthd.lavaplayer:lavaplayer:${project.lavaplayer}"))
+//    shade (implementation("net.hycrafthd.lavaplayer:lavaplayer:${project.lavaplayer}"))
+    shade (implementation("dev.arbjerg:lavaplayer:${project.lavaplayer}"))
     shade (implementation("dev.lavalink.youtube:v2:${project.youtube_source}"))
     shade (implementation("dev.arbjerg:lavadsp:0.7.8"))
     shade (implementation("com.github.topi314.lavasrc:lavasrc:${project.lavasrc}"))

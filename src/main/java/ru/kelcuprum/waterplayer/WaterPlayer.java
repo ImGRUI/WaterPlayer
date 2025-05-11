@@ -35,7 +35,6 @@ import ru.kelcuprum.alinlib.config.Localization;
 import ru.kelcuprum.alinlib.gui.GuiUtils;
 import ru.kelcuprum.alinlib.gui.toast.ToastBuilder;
 import ru.kelcuprum.waterplayer.api.WebAPI;
-import ru.kelcuprum.waterplayer.backend.History;
 import ru.kelcuprum.waterplayer.backend.KeyBind;
 import ru.kelcuprum.waterplayer.backend.MusicPlayer;
 import ru.kelcuprum.waterplayer.backend.WaterPlayerAPI;
@@ -61,7 +60,6 @@ public class WaterPlayer implements ClientModInitializer {
     public static MusicPlayer player;
     public static Localization localization = new Localization("waterplayer", WaterPlayer.getPath()+"/lang");
     public static DiscordIntegration discordIntegration;
-    public static History history;
 
     public static String getPath(){
         String path = pathConfig.getBoolean("USE_GLOBAL", false) ? pathConfig.getString("PATH", "{HOME}/WaterPlayer") : "config/WaterPlayer";
@@ -74,7 +72,6 @@ public class WaterPlayer implements ClientModInitializer {
         log("Здравствуйте, товарищ!");
         WaterPlayerAPI.loadConfig();
         player = new MusicPlayer();
-        history = new History();
         discordIntegration = new DiscordIntegration();
         WebAPI.run();
         registerBinds();

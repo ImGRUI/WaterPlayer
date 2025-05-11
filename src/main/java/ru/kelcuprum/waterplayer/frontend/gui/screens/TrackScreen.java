@@ -13,7 +13,7 @@ import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import ru.kelcuprum.alinlib.AlinLib;
 import ru.kelcuprum.alinlib.config.Localization;
-import ru.kelcuprum.alinlib.gui.Colors;
+import ru.kelcuprum.alinlib.gui.GuiUtils;
 import ru.kelcuprum.alinlib.gui.components.ConfigureScrolWidget;
 import ru.kelcuprum.alinlib.gui.components.builder.button.ButtonBuilder;
 import ru.kelcuprum.alinlib.gui.components.builder.text.TextBuilder;
@@ -75,7 +75,7 @@ public class TrackScreen extends Screen {
         if (showLyrics || showPlaylist) x += lyricsSize;
         if (showPlaylist) initPlaylist();
         else if (showLyrics) {
-            addRenderableWidget(new TextBuilder(Localization.getText("waterplayer.track.lyrics.title")).setPosition(5, 5).setPosition(lyricsSize-10, 20));
+            addRenderableWidget(new TextBuilder(Localization.getText("waterplayer.track.lyrics.title")).setPosition(5, 5).setSize(lyricsSize-10, 20).build());
             lyricsBox = addRenderableWidget(new LyricsBox(10, 35, lyricsSize - 20, height - (lyricsEnable ? 95 : 70), Component.empty())).setLyrics(Component.literal(lyricsEnable ? lyrics.getText() != null ? lyrics.getText().replace("\r", "") : "404: Not found" : "404: Not found"));
             if(lyricsEnable) addRenderableWidget(new ButtonBuilder(Component.translatable("waterplayer.track.lyrics.copy"), (onPress) -> {
                 AlinLib.MINECRAFT.keyboardHandler.setClipboard(lyrics.getText() == null ? "" : lyrics.getText());
@@ -209,8 +209,8 @@ public class TrackScreen extends Screen {
         //$$         super.renderBackground(guiGraphics);
         //#endif
         if (showLyrics || showPlaylist) {
-            guiGraphics.fill(5, 5, lyricsSize-5, 25, Colors.BLACK_ALPHA);
-            guiGraphics.fill(5, 30, lyricsSize-5, height-(lyricsEnable ? 55 : 30), Colors.BLACK_ALPHA);
+            GuiUtils.getSelected().renderTitleBackground(guiGraphics, 5, 5, lyricsSize-5, 25);
+            GuiUtils.getSelected().renderBackground(guiGraphics,5, 30, lyricsSize-5, height-(lyricsEnable ? 55 : 30));
         }
     }
 

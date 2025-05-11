@@ -41,7 +41,7 @@ public class AdditionalScreen {
                 .addPanelWidget(new ButtonBuilder(Component.translatable("waterplayer.editor"), (e) -> WaterPlayer.openTrackEditor()).setIcon(Icons.MUSIC).setCentered(false).build())
                 .addPanelWidget(new ButtonBuilder(Component.translatable("waterplayer.play"), (e) -> AlinLib.MINECRAFT.setScreen(WaterPlayer.getControlScreen(AdditionalScreen.build(parent)))).setIcon(getPlayOrPause(WaterPlayer.player.getAudioPlayer().isPaused())).setCentered(false).build())
                 //
-                .addWidget(new TextBuilder(Component.translatable("waterplayer.additional")));
+                .setCategoryTitle(Component.translatable("waterplayer.additional"));
         String[] devices = WaterPlayer.player.getAudioOutput().getAudioDevices();
         String selectedDevice = WaterPlayer.config.getString("SPEAKER", "");
         if(devices.length > 0) {
@@ -56,8 +56,8 @@ public class AdditionalScreen {
                             .setList(devices)
                             .setValue(pos)
                             .setOnPress((selectorButton) -> {
-                                WaterPlayer.config.setString("SPEAKER", devices[selectorButton.getPosition()]);
-                                WaterPlayer.player.getAudioOutput().setMixer(devices[selectorButton.getPosition()]);
+                                    WaterPlayer.config.setString("SPEAKER", devices[selectorButton.getPosition()]);
+                                    WaterPlayer.player.getAudioOutput().setMixer(devices[selectorButton.getPosition()]);
                             })
             );
         }

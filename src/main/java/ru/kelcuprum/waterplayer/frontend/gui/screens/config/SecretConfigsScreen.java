@@ -25,7 +25,7 @@ public class SecretConfigsScreen {
                 .addPanelWidget(new ButtonBuilder(Component.translatable("waterplayer.editor"), (e) -> WaterPlayer.openTrackEditor()).setIcon(Icons.MUSIC).setCentered(false).build())
                 .addPanelWidget(new ButtonBuilder(Component.translatable("waterplayer.play"), (e) -> AlinLib.MINECRAFT.setScreen(WaterPlayer.getControlScreen(SecretConfigsScreen.build(parent)))).setIcon(getPlayOrPause(WaterPlayer.player.getAudioPlayer().isPaused())).setCentered(false).build())
 
-                .addWidget(new TextBuilder(Component.translatable("waterplayer.secret")))
+                .setCategoryTitle(Component.translatable("waterplayer.secret"))
                 .addWidget(new ButtonBuilder(Component.translatable("waterplayer.secret.how_to_get_tokens"), (e)-> WaterPlayer.confirmLinkNow(SecretConfigsScreen.build(parent), "https://github.com/topi314/LavaSrc?tab=readme-ov-file#usage")).setIcon(THINK).build())
                 .addWidget(new TextBuilder(Component.translatable("waterplayer.secret.description")).setType(TextBuilder.TYPE.BLOCKQUOTE))
                 .addWidget(new CategoryBox(Component.translatable("waterplayer.secret.title.tokens"))

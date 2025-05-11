@@ -5,6 +5,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.platform.NativeImage;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.ResourceLocation;
@@ -27,6 +28,7 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.apache.logging.log4j.core.config.plugins.convert.Base64Converter.parseBase64Binary;
 import static ru.kelcuprum.waterplayer.WaterPlayer.Icons.*;
@@ -67,7 +69,7 @@ public class TextureHelper {
             if (!urls.getOrDefault(id, false)) {
                 urls.put(id, true);
                 String finalId = id;
-                new Thread(() -> registerTexture(Type.INTERNET ,url, finalId, AlinLib.MINECRAFT.getTextureManager(), GuiUtils.getResourceLocation("waterplayer", finalId))).start();
+                new Thread(() -> registerTexture(INTERNET ,url, finalId, AlinLib.MINECRAFT.getTextureManager(), GuiUtils.getResourceLocation("waterplayer", finalId))).start();
             }
             return NO_ICON;
         }
@@ -76,13 +78,13 @@ public class TextureHelper {
     @Async.Execute
     public static void registerTexture(Type type, String url, String id, TextureManager textureManager, ResourceLocation textureId) {
         WaterPlayer.log(String.format("REGISTER: %s %s", url, id), Level.DEBUG);
-        DynamicTexture texture;
+        AtomicReference<DynamicTexture> texture = new AtomicReference<>();
         if (urlsTextures.containsKey(url)) {
             JsonObject data = new JsonObject();
             data.addProperty("url", url);
             data.addProperty("id", id);
             if (!map.contains(data)) map.add(data);
-            texture = urlsTextures.get(url);
+            texture.set(urlsTextures.get(url));
         } else {
             NativeImage image;
             File textureFile = getTextureFile(id);
@@ -123,10 +125,18 @@ public class TextureHelper {
                 resourceLocationMap.put(id, NO_ICON);
                 return;
             }
-            texture = new DynamicTexture(image);
+            //#if MC< 12105
+            //$$ texture.set(new DynamicTexture(image));
+            //#else
+            Minecraft.getInstance().execute(() -> {
+                        texture.set(new DynamicTexture(() -> id, image));
+                    });
+            //#endif
         }
         if (textureManager != null) {
-            textureManager.register(textureId, texture);
+            AlinLib.MINECRAFT.execute(() -> {
+                    Minecraft.getInstance().getTextureManager().register(textureId, texture.get());
+            });
             resourceLocationMap.put(id, textureId);
             JsonObject data = new JsonObject();
             data.addProperty("url", url);
@@ -229,7 +239,7 @@ public class TextureHelper {
                     registerTexture(FILE, data.get("url").getAsString(), data.get("id").getAsString(), textureManager, l);
                 else if (data.get("id").getAsString().startsWith("playlist-") || data.get("id").getAsString().startsWith("webplaylist-"))
                     registerTexture(BASE64, data.get("url").getAsString(), data.get("id").getAsString(), textureManager, l);
-                else registerTexture(Type.INTERNET, data.get("url").getAsString(), data.get("id").getAsString(), textureManager, l);
+                else registerTexture(INTERNET, data.get("url").getAsString(), data.get("id").getAsString(), textureManager, l);
             }
         } catch (Exception e) {
             WaterPlayer.log("MAP ERROR!", Level.ERROR);

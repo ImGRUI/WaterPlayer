@@ -25,7 +25,7 @@ public class LocalizationConfigsScreen {
                 .addPanelWidget(new ButtonBuilder(Component.translatable("waterplayer.editor"), (e) -> WaterPlayer.openTrackEditor()).setIcon(MUSIC).setCentered(false).build())
                 .addPanelWidget(new ButtonBuilder(Component.translatable("waterplayer.play"), (e) -> AlinLib.MINECRAFT.setScreen(WaterPlayer.getControlScreen(LocalizationConfigsScreen.build(parent)))).setIcon(getPlayOrPause(WaterPlayer.player.getAudioPlayer().isPaused())).setCentered(false).build())
                 //
-                .addWidget(new TextBuilder(Component.translatable("waterplayer.config.localization")))
+                .setCategoryTitle(Component.translatable("waterplayer.config.localization"))
                 .addWidget(new CategoryBox(Component.translatable("waterplayer.config.localization.title.formats"))
                         .addValue(new EditBoxBuilder(Component.translatable("waterplayer.config.localization.format.time")).setLocalization(WaterPlayer.localization, "format.time").build())
                         .addValue(new EditBoxBuilder(Component.translatable("waterplayer.config.localization.format.live")).setLocalization(WaterPlayer.localization, "format.live").build())

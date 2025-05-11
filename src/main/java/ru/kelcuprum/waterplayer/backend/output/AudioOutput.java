@@ -51,13 +51,11 @@ public class AudioOutput extends Thread {
         try {
             final AudioPlayer player = musicPlayer.getAudioPlayer();
             final AudioDataFormat dataFormat = musicPlayer.getAudioDataFormat();
-
             final AudioInputStream stream = AudioPlayerInputStream.createStream(player, dataFormat, dataFormat.frameDuration(), false);
-
             final byte[] buffer = new byte[dataFormat.chunkSampleCount * dataFormat.channelCount * 2];
             final long frameDuration = dataFormat.frameDuration();
             int chunkSize;
-            while (true) {
+            while (true) { // Проверка прерывания
                 if (sourceLine == null || !sourceLine.isOpen()) {
                     closeLine();
                     if (!createLine()) {
@@ -81,13 +79,17 @@ public class AudioOutput extends Thread {
         }
     }
 
-    public void setMixer(String name) {
+    public synchronized void setMixer(String name) {
         if (mixer != null && mixer.getMixerInfo().getName().equals(name)) {
             return;
         }
         final Mixer oldMixer = mixer;
         mixer = findMixer(name, speakerInfo);
         closeLine();
+        try {
+            Thread.sleep(100); // Задержка для PulseAudio
+        } catch (InterruptedException ignored) {
+        }
         if (oldMixer != null) {
             if (!hasLinesOpen(oldMixer)) {
                 oldMixer.close();
@@ -95,7 +97,7 @@ public class AudioOutput extends Thread {
         }
     }
 
-    private boolean createLine() {
+    private synchronized boolean createLine() {
         if (mixer != null) {
             try {
                 final SourceDataLine line = (SourceDataLine) mixer.getLine(speakerInfo);
@@ -104,13 +106,14 @@ public class AudioOutput extends Thread {
                 line.start();
                 sourceLine = line;
                 return true;
-            } catch (final LineUnavailableException ignored) {
+            } catch (final LineUnavailableException e) {
+//                WaterPlayer.log("Ошибка открытия линии: " + e.getMessage(), Level.ERROR); // Добавлено логирование
             }
         }
         return false;
     }
 
-    private void closeLine() {
+    private synchronized void closeLine() {
         if (sourceLine != null) {
             sourceLine.flush();
             sourceLine.stop();
@@ -118,17 +121,24 @@ public class AudioOutput extends Thread {
         }
     }
 
-    public String[] getAudioDevices(){
+    public String[] getAudioDevices() {
         List<String> devicesList = getAudioDevicesList();
         String[] devices = new String[devicesList.size()];
-        for(int i = 0; i<devicesList.size(); i++) devices[i] = devicesList.get(i);
+        for (int i = 0; i < devicesList.size(); i++) devices[i] = devicesList.get(i);
         return devices;
     }
-    public List<String> getAudioDevicesList(){
+
+    public List<String> getAudioDevicesList() {
         List<String> devicesList = new ArrayList<>();
         for (final Mixer.Info mixerInfo : AudioSystem.getMixerInfo()) {
             final Mixer mixer = AudioSystem.getMixer(mixerInfo);
-            if (mixer.isLineSupported(speakerInfo)) devicesList.add(mixerInfo.getName());
+            try {
+                if (mixer != null && ((SourceDataLine) mixer.getLine(speakerInfo)).getFormat().isBigEndian()) {
+                    devicesList.add(mixerInfo.getName());
+//                    WaterPlayer.log("Найдено устройство: " + mixerInfo.getName(), Level.INFO); // Логирование устройств
+                }
+            } catch (Exception ignored) {
+            }
         }
         return devicesList;
     }

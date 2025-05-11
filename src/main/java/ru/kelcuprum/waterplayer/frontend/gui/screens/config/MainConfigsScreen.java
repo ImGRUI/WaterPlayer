@@ -33,7 +33,7 @@ public class MainConfigsScreen {
                 .addPanelWidget(new ButtonBuilder(Component.translatable("waterplayer.editor"), (e) -> WaterPlayer.openTrackEditor()).setIcon(MUSIC).setCentered(false).build())
                 .addPanelWidget(new ButtonBuilder(Component.translatable("waterplayer.play"), (e) -> AlinLib.MINECRAFT.setScreen(WaterPlayer.getControlScreen(MainConfigsScreen.build(parent)))).setIcon(getPlayOrPause(WaterPlayer.player.getAudioPlayer().isPaused())).setCentered(false).build())
                 //
-                .addWidget(new TextBuilder(Component.translatable("waterplayer.config")))
+                .setCategoryTitle(Component.translatable("waterplayer.config"))
                 .addWidget(new CategoryBox(Component.translatable("waterplayer.config.overlay"))
                         .addValue(new ButtonBooleanBuilder(Component.translatable("waterplayer.config.enable_overlay"), true).setConfig(WaterPlayer.config, "ENABLE_OVERLAY").build())
                         .addValue(new ButtonBooleanBuilder(Component.translatable("waterplayer.config.enable_overlay.hide_in_debug"), true).setConfig(WaterPlayer.config, "ENABLE_OVERLAY.HIDE_IN_DEBUG").build())

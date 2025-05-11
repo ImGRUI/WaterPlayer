@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Level;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
 import ru.kelcuprum.alinlib.AlinLib;
-import ru.kelcuprum.alinlib.gui.Colors;
+import ru.kelcuprum.alinlib.gui.GuiUtils;
 import ru.kelcuprum.alinlib.gui.components.ConfigureScrolWidget;
 import ru.kelcuprum.alinlib.gui.components.ImageWidget;
 import ru.kelcuprum.alinlib.gui.components.builder.button.ButtonBuilder;
@@ -296,8 +296,8 @@ public class ViewPlaylistScreen extends Screen {
                     CLOWNFISH, 220, height-clownfishSize, 0.0f, 0.0f, clownfishSize, clownfishSize, clownfishSize, clownfishSize
             );
         }
-        guiGraphics.fill(5, 5, 215, 25, Colors.BLACK_ALPHA);
-        guiGraphics.fill(5, 30, 215, maxY, Colors.BLACK_ALPHA);
+        GuiUtils.getSelected().renderTitleBackground(guiGraphics, 5, 5, 215, 25);
+        GuiUtils.getSelected().renderBackground(guiGraphics, 5, 30, 215, maxY);
     }
 
 
