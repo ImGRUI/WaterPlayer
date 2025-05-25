@@ -15,6 +15,7 @@ import ru.kelcuprum.waterplayer.backend.queue.AbstractQueue;
 import ru.kelcuprum.waterplayer.backend.queue.PlaylistQueue;
 import ru.kelcuprum.waterplayer.backend.queue.Queue;
 import ru.kelcuprum.waterplayer.frontend.localization.MusicHelper;
+import ru.kelcuprum.waterplayer.frontend.rpc.DiscordIntegration;
 
 //import java.util.*;
 
@@ -70,6 +71,7 @@ public class TrackScheduler extends AudioEventAdapter {
     }
 
     public void nextTrack() {
+        WaterPlayer.discordIntegration.send(null);
         queue.nextTrack();
         player.startTrack(queue.getCurrentTrack(), false);
         if(player.getPlayingTrack() != null) {

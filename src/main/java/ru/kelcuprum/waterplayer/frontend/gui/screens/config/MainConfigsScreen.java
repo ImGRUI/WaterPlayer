@@ -61,7 +61,7 @@ public class MainConfigsScreen {
                 .addWidget(new CategoryBox(Component.translatable("waterplayer.config.subtitles"))
                         .addValue(new ButtonBooleanBuilder(Component.translatable("waterplayer.config.subtitles"), false).setConfig(WaterPlayer.config, "SUBTITLES").build())
                         .addValue(new SliderBuilder(Component.translatable("waterplayer.config.subtitles.indent_y")).setDefaultValue(85).setConfig(WaterPlayer.config, "SUBTITLES.INDENT_Y").setMin(5).setMax(150).build())
-                        .addValue(new SliderBuilder(Component.translatable("waterplayer.config.subtitles.back_alpha")).setDefaultValue(0.5, true).setConfig(WaterPlayer.config, "SUBTITLES.BACK_ALPHA").setMin(0).setMax(1).build())
+                        .addValue(new SliderBuilder(Component.translatable("waterplayer.config.subtitles.back_alpha")).setDefaultValue(0.5, true).setConfig(WaterPlayer.config, "SUBTITLES.BACK_ALPHA").setMin(0.0).setMax(1.0).build())
                         .addValue(new EditBoxBuilder(Component.translatable("waterplayer.config.subtitles.text_color")).setColor(-1).setConfig(WaterPlayer.config, "SUBTITLES.TEXT_COLOR").build())
                 )
                 .addWidget(new CategoryBox(Component.translatable("waterplayer.config.services"))

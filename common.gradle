@@ -83,6 +83,7 @@ dependencies {
     shade (implementation("com.github.topi314.lavasrc:lavasrc-protocol:${project.lavasrc_protocol}"))
     shade (implementation("com.github.topi314.lavalyrics:lavalyrics:${project.lavalyrics}"))
     shade (implementation("ru.kelcuprum:jaudiotagger:3.0.2-SNAPSHOT.1"))
+//    shade (implementation('com.github.selemba1000:JavaMediaTransportControls:0.0.3'))
     // Discord
     shade (implementation("io.github.CDAGaming:DiscordIPC:0.10.0"))
     // API
@@ -90,7 +91,8 @@ dependencies {
         exclude(module: "gson")
     })
     // smtc
-//    shade (implementation("io.github.selemba1000:JavaMediaTranportControls:0.0.3"))
+//    shade ()
+//    implementation("io.github.selemba1000:JavaMediaTranportControls:0.0.3")
 
     // Minecraft
     if (mod_brand == 'fabric') {

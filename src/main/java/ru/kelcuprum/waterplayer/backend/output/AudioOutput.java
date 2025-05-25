@@ -43,7 +43,12 @@ public class AudioOutput extends Thread {
         this.musicPlayer = musicPlayer;
         format = AudioDataFormatTools.toAudioFormat(musicPlayer.getAudioDataFormat());
         speakerInfo = new DataLine.Info(SourceDataLine.class, format);
-        setMixer(WaterPlayer.config.getString("SPEAKER", ""));
+        try {
+            setMixer(WaterPlayer.config.getString("SPEAKER", ""));
+        } catch (Exception ex){
+            ex.printStackTrace();
+            setMixer("");
+        }
     }
 
     @Override

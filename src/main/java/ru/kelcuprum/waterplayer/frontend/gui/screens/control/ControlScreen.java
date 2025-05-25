@@ -30,7 +30,6 @@ import ru.kelcuprum.waterplayer.frontend.gui.LyricsHelper;
 import ru.kelcuprum.waterplayer.frontend.gui.components.LyricsBox;
 import ru.kelcuprum.waterplayer.frontend.gui.components.TrackButton;
 import ru.kelcuprum.waterplayer.frontend.gui.overlays.OverlayHandler;
-import ru.kelcuprum.waterplayer.frontend.gui.screens.TrackScreen;
 import ru.kelcuprum.waterplayer.frontend.gui.screens.config.PlaylistsScreen;
 import ru.kelcuprum.waterplayer.frontend.gui.screens.control.components.TimelineComponent;
 import ru.kelcuprum.waterplayer.frontend.gui.screens.control.components.TrackIconButton;
@@ -170,8 +169,7 @@ public class ControlScreen extends Screen {
         int size = width - 10;
         // - Left
         trackIcon = addRenderableWidget(new TrackIconButton(new ButtonBuilder(Component.empty(), (s) -> {
-            AudioTrack track = WaterPlayer.player.getAudioPlayer().getPlayingTrack();
-            if (track != null) AlinLib.MINECRAFT.setScreen(new TrackScreen(this, track));
+            AlinLib.MINECRAFT.setScreen(new FullScreenTrackInfo(this));
         }).setSize(34, 34).setPosition(x + 3, y + 3)));
 
         trackIcon.visible = trackIcon.active = WaterPlayer.player.getAudioPlayer().getPlayingTrack() != null;
