@@ -83,6 +83,7 @@
   "waterplayer.control.back": "Назад",
   "waterplayer.control.playing_playlist": "Плейлист: %s",
   "waterplayer.control.reset_queue": "Сбросить очередь",
+  "waterplayer.control.reset_queue.warning": "Сброс очереди приведет к пропуску текущешл ьоека и очередь не может быть возвращена!",
 
   "waterplayer.control.speed": "Скорость",
   "waterplayer.control.pitch": "Питч",

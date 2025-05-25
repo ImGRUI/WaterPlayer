@@ -82,6 +82,7 @@
   "waterplayer.control.back": "Back",
   "waterplayer.control.playing_playlist": "Playlist: %s",
   "waterplayer.control.reset_queue": "Reset Queue",
+  "waterplayer.control.reset_queue.warning": "Resetting the queue will skip the current track and cannot be returned!",
 
   "waterplayer.control.speed": "Speed",
   "waterplayer.control.pitch": "Pitch",
