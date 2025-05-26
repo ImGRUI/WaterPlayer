@@ -49,6 +49,7 @@ import ru.kelcuprum.waterplayer.frontend.rpc.DiscordIntegration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static ru.kelcuprum.alinlib.gui.Icons.DONT;
 
@@ -63,7 +64,7 @@ public class WaterPlayer implements ClientModInitializer {
 
     public static String getPath(){
         String path = pathConfig.getBoolean("USE_GLOBAL", false) ? (
-            Util.getPlatform().name().contains("win") ?
+                System.getProperty("os.name").toLowerCase(Locale.ROOT).contains("win") ?
                     pathConfig.getString("PATH", "{HOME}/WaterPlayer") :
                     pathConfig.getString("PATH.UNIX", "/home/${USER}/WaterPlayer")
         ) : "config/WaterPlayer";
