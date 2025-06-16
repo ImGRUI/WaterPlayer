@@ -1,3 +1,6 @@
+> [!CAUTION]
+> This fork provides updated youtube-source so youtube and spotify work correctly.
+
 > [!WARNING]
 > Разработка WaterPlayer не прекращена!<br>
 > Сейчас идет разработка 3.0, которая не будет иметь старый код WaterPlayer и не будет привязана только к Minecraft!<br>
